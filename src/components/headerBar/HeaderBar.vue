@@ -204,7 +204,10 @@
       </div>
     </div>
 
-    <registered :isDialogShow="isRegisteredShow" />
+    <registered
+      :isDialogShow="isRegisteredShow"
+      @closeRegistered="isRegisteredShow = false"
+    />
   </div>
 </template>
 
@@ -232,7 +235,7 @@ export default {
       userInfo: {}, //用户信息
       isPopoverShow: false, // 搜索建议框是否出现
       searchSuggestList: {}, //搜索建议列表
-      isRegisteredShow: true, //注册框是否展示
+      isRegisteredShow: false, //注册框是否展示
     };
   },
   methods: {
