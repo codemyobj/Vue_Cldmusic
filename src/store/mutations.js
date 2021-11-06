@@ -27,4 +27,14 @@ export default {
     let musicList = payload.musicList.slice(0);
     state.musicList = musicList;
   },
+
+  // 更新收藏的歌单
+  updateCollectMusicList(state, collectMusicList) {
+    state.collectMusicList = collectMusicList;
+  },
+
+  // 更新创建的歌单
+  updateCreatedMusicList(state, createdMusicList) {
+    state.createdMusicList = createdMusicList;
+  },
 };

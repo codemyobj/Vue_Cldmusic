@@ -21,6 +21,10 @@ const state = {
   musicListId: "",
   // 当前播放音乐的索引
   currentIndex: -1,
+  // 收藏的歌单
+  collectMusicList: [],
+  // 创建的歌单
+  createdMusicList: [],
 };
 
 export default new Vuex.Store({

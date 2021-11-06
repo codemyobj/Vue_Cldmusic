@@ -389,7 +389,6 @@ export default {
       // 从localStorage里取出userInfo
       this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
     }
-    console.log(this.userInfo);
   },
 };
 </script>
