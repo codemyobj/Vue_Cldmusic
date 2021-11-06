@@ -1,9 +1,18 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+// import Index from "@/components/Index.vue";
+const Index = () => import("@/components/Index.vue");
+
 Vue.use(VueRouter);
 
-const routes = [];
+const routes = [
+  { path: "/", redirect: "/index" },
+  {
+    path: "/index",
+    component: Index,
+  },
+];
 
 const router = new VueRouter({
   mode: "history",

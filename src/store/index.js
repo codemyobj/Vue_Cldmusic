@@ -4,7 +4,24 @@ import mutations from "./mutations";
 
 Vue.use(Vuex);
 
-const state = {};
+const state = {
+  // 音乐id
+  musicId: "",
+  // 音乐的播放状态
+  isPlay: false,
+  // 当前播放的歌单
+  musicList: [],
+  // 当前索引
+  currentIndex: -1,
+  // 登录状态
+  isLogin: false,
+  // 播放状态
+  isPlay: false,
+  // 当前播放歌单的id
+  musicListId: "",
+  // 当前播放音乐的索引
+  currentIndex: -1,
+};
 
 export default new Vuex.Store({
   state,
