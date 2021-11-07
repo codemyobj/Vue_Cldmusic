@@ -21,19 +21,23 @@
         />
       </el-main>
     </el-container>
+    <!-- 底部控制栏 -->
+    <BottomControl />
   </el-container>
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
 
-import HeaderBar from "./headerBar/HeaderBar.vue";
-import AsideMenu from "./asideMenu/AsideMenu.vue";
+import HeaderBar from "./headerBar/HeaderBar.vue"
+import AsideMenu from "./asideMenu/AsideMenu.vue"
+import BottomControl from "./bottomControl/BottomControl.vue"
 
 export default {
   components: {
     HeaderBar,
     AsideMenu,
+    BottomControl
   },
   name: "Index",
   props: {},
@@ -41,13 +45,35 @@ export default {
     return {
       downloadMusicInfo: {
         name: "",
-        url: "",
-      },
-    };
+        url: ""
+      }
+    }
+  },
+  watch: {
+    // 监听当前下载音乐信息
+    "$store.state.downloadMusicInfo"(current) {
+      axios
+        .get(current.url, { responseType: "blob" })
+        .then(res => {
+          let blob = res.data
+          let url = URL.createObjectURL(blob)
+          let a = document.querySelector("#downloadCurrentMusic")
+          this.downloadMusicInfo.url = url
+          this.downloadMusicInfo.name = current.name
+          this.$nextTick(() => {
+            a.click()
+            // 释放url对象
+            URL.revokeObjectURL(url)
+          })
+        })
+        .catch(err => {
+          this.$message.error("下载失败，请稍后重试！")
+        })
+    }
   },
   created() {},
-  methods: {},
-};
+  methods: {}
+}
 </script>
 <style scoped>
 .el-header {
@@ -56,5 +82,9 @@ export default {
   padding: 0;
   margin: 0;
   z-index: 100;
+}
+
+.el-main {
+  padding: 0;
 }
 </style>

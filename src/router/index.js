@@ -1,7 +1,6 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 
-// import Index from "@/components/Index.vue";
 const Index = () => import("@/components/Index.vue")
 const Discover = () => import("@/views/discover/Discover.vue")
 const Recommend = () =>

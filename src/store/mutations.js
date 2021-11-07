@@ -1,40 +1,55 @@
 export default {
   // 更新音乐url
   updateMusicId(state, musicId) {
-    state.musicId = musicId;
+    state.musicId = musicId
   },
 
   // 更新登录状态
   updataLoginState(state) {
-    state.isLogin = !state.isLogin;
+    state.isLogin = !state.isLogin
   },
 
   // 修改播放状态
   changePlayState(state, isPlay) {
-    state.isPlay = isPlay;
+    state.isPlay = isPlay
   },
 
   // 更新歌单列表和歌单id
   updateMusicList(state, payload) {
     // 当歌单发生变化
-    console.log(payload);
+    console.log(payload)
     if (payload.musicListId !== state.musicListId) {
-      state.musicListId = payload.musicListId;
-      state.currentIndex = -1;
+      state.musicListId = payload.musicListId
+      state.currentIndex = -1
     }
     // 对歌单进行深拷贝再赋值 直接赋值是浅拷贝
     // 歌单是固定的死数据 而vuex中的musicList是动态的
-    let musicList = payload.musicList.slice(0);
-    state.musicList = musicList;
+    let musicList = payload.musicList.slice(0)
+    state.musicList = musicList
   },
 
   // 更新收藏的歌单
   updateCollectMusicList(state, collectMusicList) {
-    state.collectMusicList = collectMusicList;
+    state.collectMusicList = collectMusicList
   },
 
   // 更新创建的歌单
   updateCreatedMusicList(state, createdMusicList) {
-    state.createdMusicList = createdMusicList;
+    state.createdMusicList = createdMusicList
   },
-};
+
+  // 修改播放状态
+  updatePlayState(state, isPlay) {
+    state.isPlay = isPlay
+  },
+
+  // 更新当前播放时间
+  updateCurrentTime(state, time) {
+    state.currentTime = time
+  },
+
+  // 改变歌曲加载状态
+  updateMusicLoadState(state, isLoading) {
+    state.isMusicLoad = isLoading
+  }
+}

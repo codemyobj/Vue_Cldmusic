@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   components: {},
   name: "AsideMenu",
@@ -55,16 +56,26 @@ export default {
       // 创建的歌单
       createdMusicList: [],
       // 用户信息
-      userInfo: {},
-    };
+      userInfo: {}
+    }
+  },
+  watch: {
+    // 监听收藏歌单的变化
+    "$store.state.collectMusicList"(current) {
+      this.collectedMusicList = current
+    },
+    "$route.path"() {
+      // 取路由中的首地址 用于侧边栏的导航active
+      this.defaultActive = "/" + this.$route.path.split("/")[1]
+    }
   },
   created() {
     // 取路由中的首地址 用于侧边栏的导航active
-    this.defaultActive = "/" + this.$route.path.split("/")[1];
+    this.defaultActive = "/" + this.$route.path.split("/")[1]
     // 顶部栏读取登录状态需要一定时间，这里延迟500毫秒再执行
     setTimeout(() => {
-      this.getUserMusicList();
-    }, 500);
+      this.getUserMusicList()
+    }, 500)
   },
   methods: {
     // 请求
@@ -72,31 +83,31 @@ export default {
     async getUserMusicList() {
       if (!this.$store.state.isLogin) {
         // 说明还没登录
-        this.$message.warning("请先进行登录操作");
-        return;
+        this.$message.warning("请先进行登录操作")
+        return
       }
-      let timestamp = Date.parse(new Date());
+      let timestamp = Date.parse(new Date())
       // 先从localStorage里面读取用户信息 如果登录成功是有存的
       this.userInfo =
         window.localStorage.getItem("userInfo") &&
-        JSON.parse(window.localStorage.getItem("userInfo"));
+        JSON.parse(window.localStorage.getItem("userInfo"))
       let res = await this.$request("/user/playlist", {
         uid: this.userInfo.userId,
-        timestamp,
-      });
+        timestamp
+      })
       // 对数据进行分类
-      res = res.data.playlist;
-      let index = res.findIndex((item) => item.subscribed === true);
-      this.createdMusicList = res.slice(0, index);
-      this.collectedMusicList = res.slice(index);
-      this.createdMusicList[0].name = "我喜欢的音乐";
+      res = res.data.playlist
+      let index = res.findIndex(item => item.subscribed === true)
+      this.createdMusicList = res.slice(0, index)
+      this.collectedMusicList = res.slice(index)
+      this.createdMusicList[0].name = "我喜欢的音乐"
       // 将收藏的歌单上传到vuex
-      this.$store.commit("updateCollectMusicList", this.collectedMusicList);
+      this.$store.commit("updateCollectMusicList", this.collectedMusicList)
       // 将创建的歌单上传到vuex
-      this.$store.commit("updateCreatedMusicList", this.createdMusicList);
-    },
-  },
-};
+      this.$store.commit("updateCreatedMusicList", this.createdMusicList)
+    }
+  }
+}
 </script>
 <style scoped>
 .is-active {
