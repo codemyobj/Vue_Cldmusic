@@ -17,7 +17,6 @@ export default {
   // 更新歌单列表和歌单id
   updateMusicList(state, payload) {
     // 当歌单发生变化
-    console.log(payload)
     if (payload.musicListId !== state.musicListId) {
       state.musicListId = payload.musicListId
       state.currentIndex = -1
@@ -51,5 +50,15 @@ export default {
   // 改变歌曲加载状态
   updateMusicLoadState(state, isLoading) {
     state.isMusicLoad = isLoading
+  },
+
+  // 更新当前音乐播放的索引
+  updateCurrentIndex(state, index) {
+    state.currentIndex = index
+  },
+
+  // 更新喜欢的音乐列表
+  updateLikeMusicList(state, list) {
+    state.likeMusicList = list
   }
 }

@@ -33,7 +33,11 @@ const state = {
   // 当前歌曲播放的时间
   currentTime: 0,
   // 歌曲是否在加载中
-  isMusicLoad: false
+  isMusicLoad: false,
+  // 当前歌曲在播放列表中的索引
+  currentIndex: -1,
+  // 喜欢的音乐列表
+  likeMusicList: []
 }
 
 export default new Vuex.Store({
