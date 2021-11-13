@@ -60,5 +60,15 @@ export default {
   // 更新喜欢的音乐列表
   updateLikeMusicList(state, list) {
     state.likeMusicList = list
+  },
+
+  // 更新下载的音乐的信息
+  updateDownloadMusicInfo(state, info) {
+    state.downloadMusicInfo = info
+  },
+
+  // 切换音乐详情卡片的显隐
+  changeMusicDetailCardState(state) {
+    state.isMusicDetailCardShow = !state.isMusicDetailCardShow
   }
 }

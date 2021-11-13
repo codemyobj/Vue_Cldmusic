@@ -37,7 +37,9 @@ const state = {
   // 当前歌曲在播放列表中的索引
   currentIndex: -1,
   // 喜欢的音乐列表
-  likeMusicList: []
+  likeMusicList: [],
+  // 是否进入歌曲详情卡片
+  isMusicDetailCardShow: false
 }
 
 export default new Vuex.Store({
