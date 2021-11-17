@@ -295,12 +295,10 @@ export default {
 
     // 切换音乐
     changeMusic(type, id) {
-      console.log(this.currentMusicIndex)
       let currentMusicIndex
       switch (type) {
         case "click":
           // 点击抽屉row进行切歌
-          console.log(id)
           this.$store.commit("updateMusicId", id)
           break
         case "pre":
@@ -376,7 +374,6 @@ export default {
 
     // 拖动进度条
     changeProgress(e) {
-      // console.log(e)
       this.currentTime = Math.floor((e / 100) * durationNum)
       // 改变audio的实际播放时间
       this.$refs.audioPlayer.currentTime = this.currentTime

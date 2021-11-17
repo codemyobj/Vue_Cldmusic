@@ -23,6 +23,7 @@
     </el-container>
     <!-- 底部控制栏 -->
     <BottomControl />
+    <MusicDetailCard class="musicDetailCard" />
   </el-container>
 </template>
 
@@ -32,12 +33,14 @@ import axios from "axios"
 import HeaderBar from "./headerBar/HeaderBar.vue"
 import AsideMenu from "./asideMenu/AsideMenu.vue"
 import BottomControl from "./bottomControl/BottomControl.vue"
+import MusicDetailCard from "@/views/musicDetailCard/MusicDetailCard.vue"
 
 export default {
   components: {
     HeaderBar,
     AsideMenu,
-    BottomControl
+    BottomControl,
+    MusicDetailCard
   },
   name: "Index",
   props: {},
