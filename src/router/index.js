@@ -1,27 +1,50 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue"
+import VueRouter from "vue-router"
+
+const Index = () => import("@/components/Index.vue")
+const Discover = () => import("@/views/discover/Discover.vue")
+const Recommend = () =>
+  import("@/views/discover/discoverChildren/Recommend.vue")
+
+const Video = () => import("@/views/video/Video.vue")
+
+const Favorites = () => import("@/views/favorites/Favorites.vue")
+
+const RecommendMusic = () => import("@/views/recommendmusic/RecommendMusic.vue")
 
 Vue.use(VueRouter)
 
 const routes = [
+  { path: "/", redirect: "/index" },
   {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: "/index",
+    component: Index,
+    redirect: "/discover",
+    children: [
+      {
+        path: "/discover",
+        component: Discover,
+        redirect: "/discover/recommend",
+        children: [{ path: "/discover/recommend", component: Recommend }]
+      },
+      {
+        path: "/video",
+        component: Video
+      },
+      {
+        path: "/favorites",
+        component: Favorites
+      },
+      {
+        path: "/recommendmusic",
+        component: RecommendMusic
+      }
+    ]
   }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
 })
