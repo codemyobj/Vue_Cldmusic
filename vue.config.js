@@ -13,8 +13,6 @@ module.exports = {
   },
   devServer: {
     open: true,
-    host: "192.168.100.10",
-    port: 8080,
     proxy: {
       "/api": {
         // target: 'https://www.codeman.store',
