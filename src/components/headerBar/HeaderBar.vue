@@ -212,13 +212,13 @@
 </template>
 
 <script>
-import { handleMusicTime } from "@/utils/index";
-import Registered from "@/components/registered/Registered.vue";
+import { handleMusicTime } from "@/utils/index"
+import Registered from "@/components/registered/Registered.vue"
 // 节流定时器名称
-let timer;
+let timer
 export default {
   components: {
-    Registered,
+    Registered
   },
   name: "HeaderBar",
   props: {},
@@ -230,13 +230,13 @@ export default {
       loginForm: {
         //登录表单
         password: "",
-        phoneNum: "",
+        phoneNum: ""
       },
       userInfo: {}, //用户信息
       isPopoverShow: false, // 搜索建议框是否出现
       searchSuggestList: {}, //搜索建议列表
-      isRegisteredShow: false, //注册框是否展示
-    };
+      isRegisteredShow: false //注册框是否展示
+    }
   },
   methods: {
     // 登录请求
@@ -244,153 +244,153 @@ export default {
       let { data } = await this.$request("/login/cellphone", {
         phone: this.loginForm.phoneNum,
         password: this.loginForm.password,
-        withCredentials: true,
-      });
+        withCredentials: true
+      })
       if (data.code === 200) {
-        window.localStorage.setItem("userInfo", JSON.stringify(data.profile));
-        this.userInfo = data.profile;
-        this.isPopoverShow = false;
-        this.$message.success("登录成功!");
+        window.localStorage.setItem("userInfo", JSON.stringify(data.profile))
+        this.userInfo = data.profile
+        this.isPopoverShow = false
+        this.$message.success("登录成功!")
         // 刷新页面
-        this.$router.go(0);
+        this.$router.go(0)
       } else if (data.code === 400) {
         // 手机号错误
-        this.$message.error("手机号错误");
+        this.$message.error("手机号错误")
       } else if (data.code === 502) {
         // 密码错误
-        this.$message.error("密码错误");
+        this.$message.error("密码错误")
       } else {
-        this.$message.error("登录失败，请稍后重试！");
+        this.$message.error("登录失败，请稍后重试！")
       }
     },
     // 获取热门搜索列表
     async getHotSearchList() {
-      let { data } = await this.$request("/search/hot/detail");
-      this.hotSearchList = data.data;
+      let { data } = await this.$request("/search/hot/detail")
+      this.hotSearchList = data.data
     },
     // 获取搜索建议
     async getSearchSuggest(keywords) {
-      let { data } = await this.$request("/search/suggest", { keywords });
-      this.searchSuggestList = data.result;
-      console.log(this.searchSuggestList);
+      let { data } = await this.$request("/search/suggest", { keywords })
+      this.searchSuggestList = data.result
+      console.log(this.searchSuggestList)
     },
     // 点击建议歌曲的回调
     async clickSuggestSong(id) {
-      let row = await this.getMusicInfo(id);
-      this.isSearchPopShow = false;
+      let row = await this.getMusicInfo(id)
+      this.isSearchPopShow = false
       // 获取当前的歌单列表和歌曲索引
-      let musicList = this.$store.state.musicList;
-      let currentIndex = this.$store.state.currentIndex;
+      let musicList = this.$store.state.musicList
+      let currentIndex = this.$store.state.currentIndex
       // 先判断该歌曲是否已经在歌单中存在，避免重复点击导致歌单出现相同歌曲
-      let isExist = musicList.find((item) => item.id === row.id);
+      let isExist = musicList.find(item => item.id === row.id)
       if (isExist) {
         // 若存在则只提交歌曲id并return终止
-        this.$store.commit("updateMusicId", row.id);
-        return;
+        this.$store.commit("updateMusicId", row.id)
+        return
       }
-      this.$store.commit("changePlayState", false);
+      this.$store.commit("changePlayState", false)
       // 将请求到的歌曲详情插入到歌单对应位置并提交至vuex
-      musicList.splice(currentIndex + 1, 0, row);
-      this.$store.commit("updateMusicId", row.id);
+      musicList.splice(currentIndex + 1, 0, row)
+      this.$store.commit("updateMusicId", row.id)
       this.$store.commit("updateMusicList", {
         musicList,
-        musicListId: this.$store.state.musicListId,
-      });
+        musicListId: this.$store.state.musicListId
+      })
     },
     // 根据id获取歌曲详情
     async getMusicInfo(ids) {
-      let { data } = await this.$request("/song/detail", { ids });
+      let { data } = await this.$request("/song/detail", { ids })
       // 处理事件
-      data.songs[0].dt = handleMusicTime(data.songs[0].dt);
-      return data.songs[0];
+      data.songs[0].dt = handleMusicTime(data.songs[0].dt)
+      return data.songs[0]
     },
     // 点击建议歌曲的回调
     clickSuggestSinger(id) {
-      this.$router.push({ name: "singerDetail", params: { id } });
-      this.isSearchPopShow = false;
+      this.$router.push({ name: "singerDetail", params: { id } })
+      this.isSearchPopShow = false
     },
     // 点击建议专辑的回调
     clickSuggestAlbum(id) {
-      this.$router.push({ name: "album", params: { id } });
-      this.isSearchPopShow = false;
+      this.$router.push({ name: "album", params: { id } })
+      this.isSearchPopShow = false
     },
     // 点击建议歌单的回调
     clickSuggestMusicList(id) {
-      this.$router.push({ name: "musicListDetail", params: { id } });
-      this.isSearchPopShow = false;
+      this.$router.push({ name: "musicListDetail", params: { id } })
+      this.isSearchPopShow = false
     },
     // 点击热搜的回调
     clickHotSearchItem(searchWord) {
-      this.searchInput = searchWord;
-      this.goSearch();
+      this.searchInput = searchWord
+      this.goSearch()
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     goForward() {
-      this.$router.go(1);
+      this.$router.go(1)
     },
 
     // 搜索框输入的回调
     inputSearch(e) {
       // console.log(e);
-      clearTimeout(timer);
+      clearTimeout(timer)
       if (e != "") {
         timer = setTimeout(() => {
-          this.getSearchSuggest(e);
-        }, 500);
+          this.getSearchSuggest(e)
+        }, 500)
       } else {
         // 清空searchSuggestList
-        this.searchSuggestList = {};
-        return;
+        this.searchSuggestList = {}
+        return
       }
     },
     onSubmit(e) {
       if (e.keyCode === 13 && this.searchInput !== "") {
-        this.goSearch();
+        this.goSearch()
       }
     },
     // 跳转到搜索详情页面
     goSearch() {
-      this.isSearchPopShow = false;
-      this.$router.push({ name: "search", params: { id: this.searchInput } });
+      this.isSearchPopShow = false
+      this.$router.push({ name: "search", params: { id: this.searchInput } })
     },
     // 登录
     login() {
-      this.loginByCellphone();
+      this.loginByCellphone()
     },
     // 退出登录
     logout() {
       // 清空data和localstorage中的数据 以及cookie
-      this.userInfo = {};
-      window.localStorage.setItem("userInfo", "");
-      this.clearAllCookie();
-      this.isPopoverShow = false;
+      this.userInfo = {}
+      window.localStorage.setItem("userInfo", "")
+      this.clearAllCookie()
+      this.isPopoverShow = false
     },
     // 清除所有cookie
     clearAllCookie() {
-      var date = new Date();
-      date.setTime(date.getTime() - 10000);
-      var keys = document.cookie.match(/[^=;]+(?=\=)/g);
-      console.log("需要删除的cookie名字：" + keys);
+      var date = new Date()
+      date.setTime(date.getTime() - 10000)
+      var keys = document.cookie.match(/[^=;]+(?=\=)/g)
+      console.log("需要删除的cookie名字：" + keys)
       if (keys) {
         for (var i = keys.length; i--; ) {
           document.cookie =
-            keys[i] + "=0;expire=" + date.toGMTString() + ";path=/";
+            keys[i] + "=0;expire=" + date.toGMTString() + ";path=/"
         }
       }
-    },
-  },
-  created() {
-    this.getHotSearchList();
-    if (window.localStorage.getItem("userInfo")) {
-      // 进入这里表示已经登录，更新登录状态到vuex
-      this.$store.commit("updataLoginState");
-      // 从localStorage里取出userInfo
-      this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
     }
   },
-};
+  created() {
+    this.getHotSearchList()
+    if (window.localStorage.getItem("userInfo")) {
+      // 进入这里表示已经登录，更新登录状态到vuex
+      this.$store.commit("updataLoginState")
+      // 从localStorage里取出userInfo
+      this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"))
+    }
+  }
+}
 </script>
 <style scoped lang="less">
 @import "./HeaderBar-element.css";

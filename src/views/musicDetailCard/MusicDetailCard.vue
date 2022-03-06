@@ -59,34 +59,87 @@
           <LyricsScroll :lyric="lyric" />
         </div>
       </div>
+      <div
+        class="bottom"
+        v-loading="isCommentLoading"
+        element-loading-background="rgba(255, 255, 255, 0.1)"
+      >
+        <Comment
+          class="commentComponent"
+          v-if="currentCommentPage === 1"
+          :comments="hotComments"
+          :commentType="'music'"
+          :commentId="$store.state.musicId + ''"
+          :musicTitle="musicInfo.name"
+          @getComment="getMusicComment($store.state.musicId)"
+        >
+          <div slot="title">热门评论</div>
+        </Comment>
+        <Comment
+          class="commentComponent"
+          :comments="comment.comments"
+          :commentType="'music'"
+          :commentId="$store.state.musicId + ''"
+          :musicTitle="musicInfo.name"
+          @getComment="getMusicComment($store.state.musicId)"
+        >
+          <div slot="title">最新评论{{ comment.total }}</div>
+        </Comment>
+        <!-- 评论分页 -->
+        <div class="page" v-show="comment.comments && comment.comments[0]">
+          <el-pagination
+            background
+            small
+            layout="prev,pager,next"
+            :total="comment.total"
+            :page-size="20"
+            :current-page="currentCommentPage"
+            @current-change="commentPageChange"
+          />
+        </div>
+      </div>
+      <GoTop scrollObj=".musicDetailCardContainer" />
     </div>
+    <div v-else class="tip">暂无播放音乐</div>
   </div>
 </template>
 
 <script>
 import LyricsScroll from "@/components/lyricsScroll/LyricsScroll.vue"
+import Comment from "@/components/comment/Comment.vue"
+import GoTop from "@/components/goTop/GoTop.vue"
+
 // 定时器名称
 let timer
+
 export default {
   components: {
-    LyricsScroll
+    LyricsScroll,
+    Comment,
+    GoTop
   },
   name: "MusicDetailCard",
   props: {},
   data() {
     return {
       // 是否显示歌曲详情卡片
-      isMusicDetailCardShow: true,
+      isMusicDetailCardShow: false,
       // 背景显示模式 true为白色渐变 false为毛玻璃背景
-      backgroundMode: false,
+      backgroundMode: true,
       // 是否删除卡片渲染的内容
       cleanCard: false,
       // 当前歌曲信息
       musicInfo: {},
       // 歌词
       lyric: [[0, "正在加载歌词"]],
+      // 是否加载评论
+      isCommentLoading: false,
+      // 当前评论页数
+      currentCommentPage: 1,
       // 评论信息
-      comment: {}
+      comment: {},
+      // 热门评论
+      hotComments: []
     }
   },
   watch: {
@@ -102,7 +155,6 @@ export default {
         !this.comment.comments &&
         this.$store.state.musicId !== ""
       ) {
-        console.log("请求歌词和评论")
         this.getLyric(this.$store.state.musicId)
         this.getMusicComment(this.$store.state.musicId)
         // 当卡片关闭时 ，延迟3s再删除里面渲染的内容 提升体验
@@ -116,6 +168,8 @@ export default {
     "$store.state.musicId"(musicId) {
       // 清空歌词
       this.lyric = [[0, "正在加载歌词"]]
+      // 重置评论页数
+      this.currentCommentPage = 1
       // 更新当前歌曲信息
       this.musicInfo = this.$store.state.musicList[
         this.$store.state.currentIndex
@@ -123,6 +177,7 @@ export default {
       // 优化性能，仅在卡片展示时才发送请求
       if (this.isMusicDetailCardShow) {
         this.getLyric(musicId)
+        this.getMusicComment(musicId)
       }
     }
   },
@@ -136,9 +191,45 @@ export default {
       this.lyric = this.dealLyrics(lyrics)
     },
     // 请求评论
-    getMusicComment(id, type) {
+    async getMusicComment(id, type) {
       // 获取时间戳
       var timestamp = Date.parse(new Date())
+      this.isCommentLoading = true
+      if (type === "changePage") {
+        let musicDetailCardContainer = document.querySelector(
+          ".musicDetailCardContainer"
+        )
+        let top = document.querySelector(".top")
+        musicDetailCardContainer.scrollTo({
+          behavior: "smooth",
+          top: top.clientHeight
+        })
+      }
+
+      // 当页数为第一页时,请求10条热门数据
+      if (this.currentCommentPage === 1) {
+        let res = await this.$request("/comment/hot", {
+          id,
+          limit: 10,
+          type: 0,
+          timestamp
+        })
+        if (res.data.code !== 200) {
+          this.$message.error("获取热门评论失败,请稍后重试!")
+          return
+        }
+        this.hotComments = res.data.hotComments
+      }
+      let res = await this.$request("/comment/music", {
+        id,
+        offset: (this.currentCommentPage - 1) * 20,
+        timestamp
+      })
+      if (res.data.code !== 200) {
+        this.$message.error("获取评论失败,请稍后重试")
+      }
+      this.isCommentLoading = false
+      this.comment = res.data
     },
     dealLyrics(lyrics) {
       let arr = lyrics.split("\n")
@@ -165,6 +256,12 @@ export default {
     // 改变背景
     changeBackground() {
       this.backgroundMode = !this.backgroundMode
+    },
+
+    // 页码改变
+    commentPageChange(page) {
+      this.currentCommentPage = page
+      this.getMusicComment(this.$store.state.musicId, "changePage")
     }
   }
 }
@@ -180,6 +277,7 @@ export default {
   transition: transform 0.5s;
   background-color: #fff;
   background-image: linear-gradient(to bottom, #e3e2e3, #fff);
+
   .closeCard .iconfont {
     position: absolute;
     top: 15px;
@@ -197,15 +295,27 @@ export default {
     overflow-y: scroll;
   }
 }
+
 .hide {
   transform: translateY(calc(100vh - 55px));
 }
+
 .glassCard {
   backdrop-filter: blur(50px) brightness(95%) !important;
   background-color: unset !important;
   background-image: unset !important;
   * {
     color: rgb(37, 37, 37);
+
+    .commentComponent /deep/ * {
+      color: rgb(37, 37, 37);
+      border-color: rgb(143, 143, 143);
+
+      .replied {
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
   }
 }
 .top {
@@ -287,5 +397,22 @@ export default {
       }
     }
   }
+}
+
+.bottom {
+  margin: 40px auto;
+  width: 55vw;
+}
+
+.bottom /deep/ .el-loading-spinner {
+  top: 40px;
+}
+
+.tip {
+  font-size: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

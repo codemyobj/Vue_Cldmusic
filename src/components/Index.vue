@@ -74,7 +74,6 @@ export default {
         })
     }
   },
-  created() {},
   methods: {}
 }
 </script>
@@ -87,7 +86,17 @@ export default {
   z-index: 100;
 }
 
+.routerView {
+  padding: 0 15px;
+  margin: 0;
+  width: 100%;
+  overflow-y: hidden;
+  height: calc(100vh - 105px);
+}
+
 .el-main {
   padding: 0;
+  /* height: calc(100vh - 105px); */
+  overflow-y: hidden;
 }
 </style>

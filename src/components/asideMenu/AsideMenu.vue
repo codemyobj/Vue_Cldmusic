@@ -2,19 +2,19 @@
   <el-aside width="160px">
     <el-menu active-text-color="black" router :default-active="defaultActive">
       <el-menu-item index="/discover">
-        <i class="iconfont icon-yinle"></i>
+        <i class="iconfont icon-yinle" />
         <span slot="title">发现音乐</span>
       </el-menu-item>
       <el-menu-item index="/video">
-        <i class="iconfont icon-shipin"></i>
+        <i class="iconfont icon-shipin" />
         <span slot="title">视频</span>
       </el-menu-item>
       <el-menu-item index="/favorites">
-        <i class="iconfont icon-more"></i>
+        <i class="iconfont icon-more" />
         <span slot="title">收藏</span>
       </el-menu-item>
       <el-menu-item index="/recommendmusic">
-        <i class="iconfont icon-good"></i>
+        <i class="iconfont icon-good" />
         <span slot="title">每日推荐</span>
       </el-menu-item>
       <el-menu-item-group>
@@ -24,7 +24,7 @@
           :key="index"
           :index="`/musiclistdetail/${item.id}`"
         >
-          <i class="iconfont icon-gedan"></i>{{ item.name }}
+          <i class="iconfont icon-gedan" />{{ item.name }}
         </el-menu-item>
       </el-menu-item-group>
 
@@ -35,7 +35,7 @@
           :key="index"
           :index="`/musiclistdetail/${item.id}`"
         >
-          <i class="iconfont icon-gedan"></i>{{ item.name }}
+          <i class="iconfont icon-gedan" />{{ item.name }}
         </el-menu-item>
       </el-menu-item-group>
     </el-menu>
@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import axios from "axios"
 export default {
   components: {},
   name: "AsideMenu",
@@ -131,7 +130,7 @@ export default {
 }
 
 .el-menu-item:hover {
-  background-color: #f5f5f5 !important;
+  background-color: #f5f5f6 !important;
 }
 
 .el-menu-item {

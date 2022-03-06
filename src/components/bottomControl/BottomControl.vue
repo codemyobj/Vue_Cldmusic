@@ -12,8 +12,8 @@
     <!-- 左边  -->
     <div class="left">
       <div class="avatar" @click="$store.commit('changeMusicDetailCardState')">
-        <img :src="musicDetail.al.picUrl" alt="" v-if="musicDetail.al" />
-        <img src="~/assets/img/test.jpg" alt="" v-else />
+        <img :src="musicDetail.al.picUrl" v-if="musicDetail.al" />
+        <img src="~/assets/img/test.jpg" v-else />
       </div>
       <div class="musicInfo">
         <div class="musicName" v-if="musicDetail && musicDetail.name">
@@ -442,6 +442,8 @@ export default {
   height: 55px;
   position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   padding: 6px 10px;
