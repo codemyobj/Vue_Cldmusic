@@ -29,7 +29,7 @@
 </template>
 <script>
 export default {
-  name: "xxx",
+  name: "SortBox",
   components: {},
   props: {
     currentTag: {

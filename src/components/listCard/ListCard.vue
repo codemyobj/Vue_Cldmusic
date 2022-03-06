@@ -68,11 +68,12 @@ export default {
 .listCard {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   margin: 10px 0;
 }
 .listCardItem {
   width: 18%;
-  margin: 0 2% 20px 0;
+  margin-bottom: 20px;
   overflow: hidden;
   cursor: pointer;
 }
